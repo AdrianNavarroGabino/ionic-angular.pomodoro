@@ -19,11 +19,11 @@
       
   </div>
 
-  <ng-template>
+  <ng-template [ngIf]="!(currentMinutes || currentSeconds)" [ngIfElse]="countdown">
     <div class="time" (click)="openPicker()">{{timer}} minutes</div>
   </ng-template>
 
-  <ng-template>
-
+  <ng-template #countdown>
+    <div class="time">{{currentMinutes}}:{{currentSeconds}}</div>
   </ng-template>
 </ion-content>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { PickerController } from '@ionic/angular';
+import { now } from '@ionic/core/dist/types/utils/helpers';
 
 @Component({
   selector: 'app-home',
@@ -8,13 +9,44 @@ import { PickerController } from '@ionic/angular';
 })
 export class HomePage {
   public timer: number = 25;
+  public currentMinutes: string;
+  public currentSeconds: string;
+  public start: Date;
 
   constructor(private pickerCtrl: PickerController) {}
 
-  pomodoro() {
-    alert("hola");
+  ngOnInit() {
+    const start = localStorage.getItem("start");
+    
+    if(start) {
+      this.start = new Date(start);
+      if(((new Date()).getTime() - this.start.getTime()) / 1000 / 60 > 25) {
+        localStorage.removeItem("start");
+        this.start = null;
+      }
+      else {
+        this.playPomodoro();
+      }
+    }
   }
 
+  pomodoro() {
+    localStorage.setItem("start", (new Date()).toString());
+    this.start = new Date();
+    this.playPomodoro();
+  }
+
+  async playPomodoro() {
+    setInterval(() => {
+      this.calculateTime();
+    }, 1000);
+  }
+
+  calculateTime() {
+    const now = new Date();
+    this.currentMinutes = ((this.timer - ((now.getTime() - this.start.getTime()) / 1000 / 60) | 0)).toString().padStart(2, "0");
+    this.currentSeconds = ((60 - ((now.getTime() - this.start.getTime()) / 1000 % 60) | 0)).toString().padStart(2, "0");
+  }
 
   async openPicker() {
     const picker = await this.pickerCtrl.create({
