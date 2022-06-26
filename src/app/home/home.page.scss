@@ -25,3 +25,15 @@
 #container a {
   text-decoration: none;
 }
+
+.image {
+  width: 40vw;
+  height: auto;
+}
+
+.time {
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
