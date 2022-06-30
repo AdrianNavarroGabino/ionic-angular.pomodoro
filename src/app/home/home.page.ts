@@ -32,9 +32,13 @@ export class HomePage {
   }
 
   pomodoro() {
-    localStorage.setItem("start", (new Date()).toString());
-    this.start = new Date();
-    this.playPomodoro();
+    if(!this.start) {
+      localStorage.setItem("start", (new Date()).toString());
+      this.start = new Date();
+      this.currentMinutes = (this.timer - 1).toString().padStart(2, "0");
+      this.currentSeconds = "59";
+      this.playPomodoro();
+    }
   }
 
   async playPomodoro() {
@@ -101,6 +105,9 @@ export class HomePage {
         {
           text: 'Yes',
           handler: () => this.clearTime()
+        },
+        {
+          text: 'No'
         }
       ]
     });
