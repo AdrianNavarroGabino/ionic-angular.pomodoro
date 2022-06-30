@@ -14,7 +14,7 @@
   </ion-header>
 
   <div id="container">
-      <img src="../../assets/tomato.png" alt="Tomato image" class="image" (click)="pomodoro()">
+      <img src="../../assets/tomato.png" alt="Tomato image" class="image" (click)="pomodoro()" (contextmenu)="stopTimer($event)">
 
       
   </div>

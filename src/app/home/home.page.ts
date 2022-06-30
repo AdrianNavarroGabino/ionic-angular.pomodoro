@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PickerController } from '@ionic/angular';
+import { AlertController, PickerController } from '@ionic/angular';
 import { now } from '@ionic/core/dist/types/utils/helpers';
 
 @Component({
@@ -12,8 +12,9 @@ export class HomePage {
   public currentMinutes: string;
   public currentSeconds: string;
   public start: Date;
+  private intervalId: any;
 
-  constructor(private pickerCtrl: PickerController) {}
+  constructor(private pickerCtrl: PickerController, private alertController: AlertController) {}
 
   ngOnInit() {
     const start = localStorage.getItem("start");
@@ -37,7 +38,7 @@ export class HomePage {
   }
 
   async playPomodoro() {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.calculateTime();
     }, 1000);
   }
@@ -84,5 +85,34 @@ export class HomePage {
     });
 
     await picker.present();
+  }
+
+  stopTimer(event) {
+    event.preventDefault();
+    this.presentAlert();
+  }
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Stop timer',
+      message: 'Would you like to stop the timer?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => this.clearTime()
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  clearTime() {
+    localStorage.removeItem("start");
+    this.start = null;
+    this.currentMinutes = null;
+    this.currentSeconds = null;
+    clearInterval(this.intervalId);
   }
 }
